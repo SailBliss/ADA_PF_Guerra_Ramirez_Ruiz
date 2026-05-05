@@ -1,4 +1,4 @@
-# Documentacion del parser
+# Documentacion del parser y MergeSort
 
 ## Para que sirve
 
@@ -10,7 +10,8 @@ data/WA_Fn-UseC_-Telco-Customer-Churn.csv
 
 La idea es tomar los datos del archivo y guardarlos en una estructura de C++ para poder usarlos despues en los algoritmos del trabajo.
 
-Por ahora el parser solo lee los datos. Todavia no hace MergeSort, Binary Search, Kruskal ni Knapsack.
+Por ahora el proyecto lee los datos y permite ordenarlos con MergeSort por `tenure` descendente.
+Todavia no hace Binary Search, Kruskal ni Knapsack.
 
 ## Archivos usados
 
@@ -19,6 +20,8 @@ Los archivos principales son:
 ```text
 src/parser.hpp
 src/parser.cpp
+src/mergesort.hpp
+src/mergesort.cpp
 ```
 
 Tambien hay una prueba sencilla para revisar que el parser funcione desde consola.
@@ -154,14 +157,45 @@ No cuenta:
 
 El tamano del vector debe ser igual a `totalRegistros`.
 
-Con el dataset actual, la salida fue:
+Con el dataset actual, los conteos son:
 
 ```text
 totalRegistros: 7043
 totalChargesNulos: 11
 tamanoVector: 7043
-primerCustomerID: 7590-VHVEG
-ultimoCustomerID: 3186-AJIEK
+```
+
+## MergeSort de solicitudes
+
+La funcion publica para ordenar es:
+
+```cpp
+void mergeSortSolicitudes(std::vector<Solicitud>& solicitudes);
+```
+
+Ordena el vector por:
+
+```text
+tenure DESC
+```
+
+El algoritmo implementado es MergeSort clasico con Divide & Conquer:
+
+- Divide el rango en dos mitades.
+- Ordena recursivamente cada mitad.
+- Mezcla ambas mitades en un vector auxiliar.
+
+No se usa:
+
+```cpp
+std::sort
+std::stable_sort
+```
+
+El ordenamiento es estable. Si dos solicitudes tienen el mismo `tenure`, se conserva el orden relativo original porque durante el merge, cuando hay empate, se toma primero el elemento del lado izquierdo:
+
+```cpp
+if (solicitudes[i].tenure >= solicitudes[j].tenure)
 ```
 
 ## Errores que pueden pasar
@@ -194,8 +228,15 @@ La prueba imprime:
 - Total de registros.
 - Cantidad de `TotalCharges` vacios.
 - Tamano del vector.
-- Primer `customerID`.
-- Ultimo `customerID`.
+- Primeros 5 `customerID` y `tenure` antes de ordenar.
+- Primeros 10 `customerID` y `tenure` despues de ordenar.
+- El `tenure` maximo del primer elemento ya ordenado.
+
+Con el dataset actual, despues de ordenar el primer elemento tiene:
+
+```text
+tenureMaximo: 72
+```
 
 ## Que esta hecho
 
@@ -209,10 +250,10 @@ Ya esta hecho:
 - Manejar `TotalCharges` vacio.
 - Contar registros.
 - Guardar todo en un `vector<Solicitud>`.
+- Ordenar solicitudes por `tenure` descendente con MergeSort estable.
 
 Falta para despues:
 
-- MergeSort.
 - Binary Search.
 - Kruskal.
 - Knapsack.
