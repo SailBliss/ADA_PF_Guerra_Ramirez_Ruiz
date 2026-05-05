@@ -98,6 +98,10 @@ inline int ejecutarPruebaMergeSort(int argc, char *argv[])
         escribirSolicitudesOrdenadas(salida, solicitudes);
         cout << "\nArchivo escrito: " << salida << '\n';
 
+        const string salidaBusquedas = "results/busquedas_A.txt";
+        escribirResultadosBusqueda(salidaBusquedas, solicitudes);
+        cout << "Archivo escrito: " << salidaBusquedas << '\n';
+
         if (!solicitudes.empty())
         {
             cout << "\ntenureMaximo: " << solicitudes.front().tenure << '\n';

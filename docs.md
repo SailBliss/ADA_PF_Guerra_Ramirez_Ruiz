@@ -284,6 +284,53 @@ k=60 -> idx=XXX -> customerID=XXXX
 
 Si no se encuentra un indice valido, se imprime `customerID=N/A`.
 
+## Escritura de resultados de busqueda A
+
+La funcion publica para guardar las consultas de Binary Search es:
+
+```cpp
+void escribirResultadosBusqueda(const std::string& path,
+                                const std::vector<Solicitud>& v);
+```
+
+Esta funcion recibe la ruta de salida y el vector de solicitudes ya ordenado por `tenure DESC`.
+
+Internamente ejecuta estas consultas:
+
+```text
+k = 72
+k = 60
+k = 45
+k = 30
+k = 12
+```
+
+Para cada valor de `k`, llama a:
+
+```cpp
+findFirstTenureGE(v, k)
+```
+
+Luego escribe el indice encontrado y el `customerID`. Si no encuentra una solicitud valida, escribe `customerID=N/A`.
+
+El archivo generado es:
+
+```text
+results/busquedas_A.txt
+```
+
+El formato de cada linea es:
+
+```text
+Q_A01 k=72 → idx=... → customerID=...
+Q_A02 k=60 → idx=... → customerID=...
+Q_A03 k=45 → idx=... → customerID=...
+Q_A04 k=30 → idx=... → customerID=...
+Q_A05 k=12 → idx=... → customerID=...
+```
+
+Si la carpeta `results` no existe, la funcion intenta crearla antes de abrir el archivo.
+
 ## Escritura del CSV ordenado
 
 La funcion publica para escribir el resultado es:
@@ -320,6 +367,7 @@ El parser puede fallar si:
 - Una fila esta incompleta.
 - Un numero viene mal escrito y no se puede convertir.
 - No se puede crear o escribir el archivo de salida.
+- No se puede crear o escribir el archivo de resultados de busqueda.
 
 ## Como compilar
 
@@ -347,6 +395,7 @@ La prueba imprime:
 - Primeros 10 `customerID` y `tenure` despues de ordenar.
 - Consultas de Binary Search para `tenure >= k`.
 - La ruta del archivo CSV generado.
+- La ruta del archivo de busquedas generado.
 - El `tenure` maximo del primer elemento ya ordenado.
 
 Con el dataset actual, despues de ordenar el primer elemento tiene:
@@ -359,6 +408,7 @@ Tambien se genera:
 
 ```text
 results/solicitudes_ordenadas.csv
+results/busquedas_A.txt
 ```
 
 Con el dataset actual, el archivo tiene 7044 lineas: una linea de header y 7043 solicitudes.
@@ -379,6 +429,7 @@ Ya esta hecho:
 - Medir tiempos de MergeSort con `std::chrono::high_resolution_clock`.
 - Buscar recursivamente la primera solicitud con `tenure >= k`.
 - Escribir `results/solicitudes_ordenadas.csv` con las solicitudes ordenadas.
+- Escribir `results/busquedas_A.txt` con las consultas A de Binary Search.
 
 Falta para despues:
 
