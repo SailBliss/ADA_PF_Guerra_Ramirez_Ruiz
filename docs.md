@@ -200,6 +200,33 @@ El ordenamiento es estable. Si dos solicitudes tienen el mismo `tenure`, se cons
 if (solicitudes[i].tenure >= solicitudes[j].tenure)
 ```
 
+## Medicion de tiempos de MergeSort
+
+El programa principal tambien mide el tiempo de ejecucion de `mergeSortSolicitudes()` usando:
+
+```cpp
+std::chrono::high_resolution_clock
+```
+
+Para no medir el costo de copiar datos, primero se crean tres copias del vector original:
+
+```text
+full: 7043 registros
+sub3500: 3500 registros
+sub1000: 1000 registros
+```
+
+Despues, para cada copia se toma el tiempo justo antes y justo despues de llamar a `mergeSortSolicitudes()`. La duracion se calcula en milisegundos como `double` y se imprime con dos decimales.
+
+La salida tiene este formato:
+
+```text
+--- TIEMPOS MERGESORT ---
+n=7043 → XX.XX ms
+n=3500 → XX.XX ms
+n=1000 → XX.XX ms
+```
+
 ## Binary Search recursivo por `tenure`
 
 La funcion publica para buscar es:
@@ -316,6 +343,7 @@ La prueba imprime:
 - Cantidad de `TotalCharges` vacios.
 - Tamano del vector.
 - Primeros 5 `customerID` y `tenure` antes de ordenar.
+- Tiempos de MergeSort para `n=7043`, `n=3500` y `n=1000`.
 - Primeros 10 `customerID` y `tenure` despues de ordenar.
 - Consultas de Binary Search para `tenure >= k`.
 - La ruta del archivo CSV generado.
@@ -348,6 +376,7 @@ Ya esta hecho:
 - Contar registros.
 - Guardar todo en un `vector<Solicitud>`.
 - Ordenar solicitudes por `tenure` descendente con MergeSort estable.
+- Medir tiempos de MergeSort con `std::chrono::high_resolution_clock`.
 - Buscar recursivamente la primera solicitud con `tenure >= k`.
 - Escribir `results/solicitudes_ordenadas.csv` con las solicitudes ordenadas.
 
