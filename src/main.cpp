@@ -6,6 +6,7 @@
 #include <algorithm>
 #include <exception>
 #include <iostream>
+#include <string>
 #include <vector>
 
 using namespace std;
@@ -45,6 +46,10 @@ inline int ejecutarPruebaMergeSort(int argc, char *argv[])
 
         cout << "\nPrimeros 10 despues de ordenar por tenure DESC:\n";
         imprimirPrimeros(solicitudes, 10);
+
+        const string salida = "results/solicitudes_ordenadas.csv";
+        escribirSolicitudesOrdenadas(salida, solicitudes);
+        cout << "\nArchivo escrito: " << salida << '\n';
 
         if (!solicitudes.empty())
         {

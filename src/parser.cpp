@@ -1,6 +1,13 @@
 #include "parser.hpp"
 
+#ifdef _WIN32
+#include <direct.h>
+#else
+#include <sys/stat.h>
+#endif
+
 #include <fstream>
+#include <iomanip>
 #include <stdexcept>
 #include <string>
 #include <unordered_map>
@@ -64,6 +71,46 @@ string campoEn(const vector<string>& campos, int indice, const string& nombreCol
     return campos[static_cast<size_t>(indice)];
 }
 
+void escribirCampoCSV(ofstream& archivo, const string& valor) {
+    const bool requiereComillas = valor.find_first_of(",\"\r\n") != string::npos;
+
+    if (!requiereComillas) {
+        archivo << valor;
+        return;
+    }
+
+    archivo << '"';
+    for (const char c : valor) {
+        if (c == '"') {
+            archivo << "\"\"";
+        } else {
+            archivo << c;
+        }
+    }
+    archivo << '"';
+}
+
+string obtenerDirectorioPadre(const string& path) {
+    const size_t posicion = path.find_last_of("/\\");
+    if (posicion == string::npos) {
+        return "";
+    }
+
+    return path.substr(0, posicion);
+}
+
+void crearDirectorioSiHaceFalta(const string& directorio) {
+    if (directorio.empty()) {
+        return;
+    }
+
+#ifdef _WIN32
+    _mkdir(directorio.c_str());
+#else
+    mkdir(directorio.c_str(), 0755);
+#endif
+}
+
 }
 
 vector<Solicitud> parseSolicitudes(const string& path,
@@ -121,4 +168,26 @@ vector<Solicitud> parseSolicitudes(const string& path,
     }
 
     return solicitudes;
+}
+
+void escribirSolicitudesOrdenadas(const string& path,
+                                  const vector<Solicitud>& solicitudes) {
+    crearDirectorioSiHaceFalta(obtenerDirectorioPadre(path));
+
+    ofstream archivo(path);
+    if (!archivo.is_open()) {
+        throw runtime_error("No se pudo crear el archivo CSV: " + path);
+    }
+
+    archivo << "customerID,tenure,MonthlyCharges,TotalCharges,Churn\n";
+    archivo << fixed << setprecision(2);
+
+    for (const Solicitud& solicitud : solicitudes) {
+        escribirCampoCSV(archivo, solicitud.customerID);
+        archivo << ',' << solicitud.tenure << ','
+                << solicitud.monthlyCharges << ','
+                << solicitud.totalCharges << ',';
+        escribirCampoCSV(archivo, solicitud.churn);
+        archivo << '\n';
+    }
 }

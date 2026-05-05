@@ -10,7 +10,7 @@ data/WA_Fn-UseC_-Telco-Customer-Churn.csv
 
 La idea es tomar los datos del archivo y guardarlos en una estructura de C++ para poder usarlos despues en los algoritmos del trabajo.
 
-Por ahora el proyecto lee los datos y permite ordenarlos con MergeSort por `tenure` descendente.
+Por ahora el proyecto lee los datos, los ordena con MergeSort por `tenure` descendente y genera un CSV con el resultado ordenado.
 Todavia no hace Binary Search, Kruskal ni Knapsack.
 
 ## Archivos usados
@@ -24,7 +24,7 @@ src/mergesort.hpp
 src/mergesort.cpp
 ```
 
-Tambien hay una prueba sencilla para revisar que el parser funcione desde consola.
+Tambien hay una prueba sencilla para revisar que el parser, el ordenamiento y la escritura del CSV funcionen desde consola.
 
 ## Estructura `Solicitud`
 
@@ -198,6 +198,33 @@ El ordenamiento es estable. Si dos solicitudes tienen el mismo `tenure`, se cons
 if (solicitudes[i].tenure >= solicitudes[j].tenure)
 ```
 
+## Escritura del CSV ordenado
+
+La funcion publica para escribir el resultado es:
+
+```cpp
+void escribirSolicitudesOrdenadas(const std::string& path,
+                                  const std::vector<Solicitud>& solicitudes);
+```
+
+Esta funcion recibe la ruta de salida y el vector de solicitudes ya ordenado. El programa principal la usa despues de llamar a `mergeSortSolicitudes`.
+
+El archivo generado es:
+
+```text
+results/solicitudes_ordenadas.csv
+```
+
+El CSV tiene este header:
+
+```text
+customerID,tenure,MonthlyCharges,TotalCharges,Churn
+```
+
+Luego escribe todas las solicitudes en el orden actual del vector. En el flujo actual ese orden es `tenure DESC`, porque primero se parsea el dataset, despues se ordena con MergeSort y finalmente se escribe el archivo.
+
+Si la carpeta `results` no existe, la funcion intenta crearla antes de abrir el archivo.
+
 ## Errores que pueden pasar
 
 El parser puede fallar si:
@@ -206,6 +233,7 @@ El parser puede fallar si:
 - Falta una columna importante.
 - Una fila esta incompleta.
 - Un numero viene mal escrito y no se puede convertir.
+- No se puede crear o escribir el archivo de salida.
 
 ## Como compilar
 
@@ -230,6 +258,7 @@ La prueba imprime:
 - Tamano del vector.
 - Primeros 5 `customerID` y `tenure` antes de ordenar.
 - Primeros 10 `customerID` y `tenure` despues de ordenar.
+- La ruta del archivo CSV generado.
 - El `tenure` maximo del primer elemento ya ordenado.
 
 Con el dataset actual, despues de ordenar el primer elemento tiene:
@@ -237,6 +266,14 @@ Con el dataset actual, despues de ordenar el primer elemento tiene:
 ```text
 tenureMaximo: 72
 ```
+
+Tambien se genera:
+
+```text
+results/solicitudes_ordenadas.csv
+```
+
+Con el dataset actual, el archivo tiene 7044 lineas: una linea de header y 7043 solicitudes.
 
 ## Que esta hecho
 
@@ -251,6 +288,7 @@ Ya esta hecho:
 - Contar registros.
 - Guardar todo en un `vector<Solicitud>`.
 - Ordenar solicitudes por `tenure` descendente con MergeSort estable.
+- Escribir `results/solicitudes_ordenadas.csv` con las solicitudes ordenadas.
 
 Falta para despues:
 
