@@ -1,4 +1,4 @@
-# Documentacion del parser y MergeSort
+# Documentacion del parser, MergeSort y Binary Search
 
 ## Para que sirve
 
@@ -10,8 +10,8 @@ data/WA_Fn-UseC_-Telco-Customer-Churn.csv
 
 La idea es tomar los datos del archivo y guardarlos en una estructura de C++ para poder usarlos despues en los algoritmos del trabajo.
 
-Por ahora el proyecto lee los datos, los ordena con MergeSort por `tenure` descendente y genera un CSV con el resultado ordenado.
-Todavia no hace Binary Search, Kruskal ni Knapsack.
+Por ahora el proyecto lee los datos, los ordena con MergeSort por `tenure` descendente, ejecuta consultas con Binary Search recursivo sobre `tenure` y genera un CSV con el resultado ordenado.
+Todavia no hace Kruskal ni Knapsack.
 
 ## Archivos usados
 
@@ -22,6 +22,8 @@ src/parser.hpp
 src/parser.cpp
 src/mergesort.hpp
 src/mergesort.cpp
+src/binary_search.hpp
+src/binary_search.cpp
 ```
 
 Tambien hay una prueba sencilla para revisar que el parser, el ordenamiento y la escritura del CSV funcionen desde consola.
@@ -198,6 +200,63 @@ El ordenamiento es estable. Si dos solicitudes tienen el mismo `tenure`, se cons
 if (solicitudes[i].tenure >= solicitudes[j].tenure)
 ```
 
+## Binary Search recursivo por `tenure`
+
+La funcion publica para buscar es:
+
+```cpp
+int findFirstTenureGE(const std::vector<Solicitud>& v, int k);
+```
+
+Recibe un vector de solicitudes ya ordenado por:
+
+```text
+tenure DESC
+```
+
+Devuelve el indice de la primera solicitud cuyo:
+
+```text
+tenure >= k
+```
+
+Si no encuentra ninguna solicitud que cumpla, devuelve:
+
+```text
+-1
+```
+
+La implementacion esta en `src/binary_search.cpp` y usa un helper recursivo interno:
+
+```cpp
+int binarySearchRec(const std::vector<Solicitud>& v,
+                    int left,
+                    int right,
+                    int k);
+```
+
+No usa algoritmos de STL.
+
+Como el vector esta en orden descendente, si una posicion no cumple `tenure >= k`, las posiciones a su derecha tampoco pueden cumplir. Por eso la busqueda recursiva continua hacia la izquierda en ese caso.
+
+En el programa principal se prueban estas consultas despues de ordenar:
+
+```text
+k = 72
+k = 60
+k = 45
+k = 30
+k = 12
+```
+
+Cada consulta imprime:
+
+```text
+k=60 -> idx=XXX -> customerID=XXXX
+```
+
+Si no se encuentra un indice valido, se imprime `customerID=N/A`.
+
 ## Escritura del CSV ordenado
 
 La funcion publica para escribir el resultado es:
@@ -258,6 +317,7 @@ La prueba imprime:
 - Tamano del vector.
 - Primeros 5 `customerID` y `tenure` antes de ordenar.
 - Primeros 10 `customerID` y `tenure` despues de ordenar.
+- Consultas de Binary Search para `tenure >= k`.
 - La ruta del archivo CSV generado.
 - El `tenure` maximo del primer elemento ya ordenado.
 
@@ -288,10 +348,10 @@ Ya esta hecho:
 - Contar registros.
 - Guardar todo en un `vector<Solicitud>`.
 - Ordenar solicitudes por `tenure` descendente con MergeSort estable.
+- Buscar recursivamente la primera solicitud con `tenure >= k`.
 - Escribir `results/solicitudes_ordenadas.csv` con las solicitudes ordenadas.
 
 Falta para despues:
 
-- Binary Search.
 - Kruskal.
 - Knapsack.

@@ -1,5 +1,6 @@
 // main :D
 
+#include "binary_search.hpp"
 #include "mergesort.hpp"
 #include "parser.hpp"
 
@@ -46,6 +47,23 @@ inline int ejecutarPruebaMergeSort(int argc, char *argv[])
 
         cout << "\nPrimeros 10 despues de ordenar por tenure DESC:\n";
         imprimirPrimeros(solicitudes, 10);
+
+        cout << "\nConsultas Binary Search tenure >= k:\n";
+        const vector<int> consultas = {72, 60, 45, 30, 12};
+        for (int k : consultas)
+        {
+            const int idx = findFirstTenureGE(solicitudes, k);
+            cout << "k=" << k << " -> idx=" << idx << " -> customerID=";
+            if (idx != -1)
+            {
+                cout << solicitudes[idx].customerID;
+            }
+            else
+            {
+                cout << "N/A";
+            }
+            cout << '\n';
+        }
 
         const string salida = "results/solicitudes_ordenadas.csv";
         escribirSolicitudesOrdenadas(salida, solicitudes);
