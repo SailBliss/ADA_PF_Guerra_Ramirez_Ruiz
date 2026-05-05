@@ -16,4 +16,7 @@ std::vector<Solicitud> parseSolicitudes(const std::string& path,
                                         int& totalRegistros,
                                         int& totalChargesNulos);
 
+void escribirSolicitudesOrdenadas(const std::string& path,
+                                  const std::vector<Solicitud>& solicitudes);
+
 #endif

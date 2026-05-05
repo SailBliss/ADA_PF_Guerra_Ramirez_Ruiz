@@ -1,4 +1,4 @@
-# Documentacion del parser
+# Documentacion del parser y MergeSort
 
 ## Para que sirve
 
@@ -10,7 +10,8 @@ data/WA_Fn-UseC_-Telco-Customer-Churn.csv
 
 La idea es tomar los datos del archivo y guardarlos en una estructura de C++ para poder usarlos despues en los algoritmos del trabajo.
 
-Por ahora el parser solo lee los datos. Todavia no hace MergeSort, Binary Search, Kruskal ni Knapsack.
+Por ahora el proyecto lee los datos, los ordena con MergeSort por `tenure` descendente y genera un CSV con el resultado ordenado.
+Todavia no hace Binary Search, Kruskal ni Knapsack.
 
 ## Archivos usados
 
@@ -19,9 +20,11 @@ Los archivos principales son:
 ```text
 src/parser.hpp
 src/parser.cpp
+src/mergesort.hpp
+src/mergesort.cpp
 ```
 
-Tambien hay una prueba sencilla para revisar que el parser funcione desde consola.
+Tambien hay una prueba sencilla para revisar que el parser, el ordenamiento y la escritura del CSV funcionen desde consola.
 
 ## Estructura `Solicitud`
 
@@ -154,15 +157,73 @@ No cuenta:
 
 El tamano del vector debe ser igual a `totalRegistros`.
 
-Con el dataset actual, la salida fue:
+Con el dataset actual, los conteos son:
 
 ```text
 totalRegistros: 7043
 totalChargesNulos: 11
 tamanoVector: 7043
-primerCustomerID: 7590-VHVEG
-ultimoCustomerID: 3186-AJIEK
 ```
+
+## MergeSort de solicitudes
+
+La funcion publica para ordenar es:
+
+```cpp
+void mergeSortSolicitudes(std::vector<Solicitud>& solicitudes);
+```
+
+Ordena el vector por:
+
+```text
+tenure DESC
+```
+
+El algoritmo implementado es MergeSort clasico con Divide & Conquer:
+
+- Divide el rango en dos mitades.
+- Ordena recursivamente cada mitad.
+- Mezcla ambas mitades en un vector auxiliar.
+
+No se usa:
+
+```cpp
+std::sort
+std::stable_sort
+```
+
+El ordenamiento es estable. Si dos solicitudes tienen el mismo `tenure`, se conserva el orden relativo original porque durante el merge, cuando hay empate, se toma primero el elemento del lado izquierdo:
+
+```cpp
+if (solicitudes[i].tenure >= solicitudes[j].tenure)
+```
+
+## Escritura del CSV ordenado
+
+La funcion publica para escribir el resultado es:
+
+```cpp
+void escribirSolicitudesOrdenadas(const std::string& path,
+                                  const std::vector<Solicitud>& solicitudes);
+```
+
+Esta funcion recibe la ruta de salida y el vector de solicitudes ya ordenado. El programa principal la usa despues de llamar a `mergeSortSolicitudes`.
+
+El archivo generado es:
+
+```text
+results/solicitudes_ordenadas.csv
+```
+
+El CSV tiene este header:
+
+```text
+customerID,tenure,MonthlyCharges,TotalCharges,Churn
+```
+
+Luego escribe todas las solicitudes en el orden actual del vector. En el flujo actual ese orden es `tenure DESC`, porque primero se parsea el dataset, despues se ordena con MergeSort y finalmente se escribe el archivo.
+
+Si la carpeta `results` no existe, la funcion intenta crearla antes de abrir el archivo.
 
 ## Errores que pueden pasar
 
@@ -172,6 +233,7 @@ El parser puede fallar si:
 - Falta una columna importante.
 - Una fila esta incompleta.
 - Un numero viene mal escrito y no se puede convertir.
+- No se puede crear o escribir el archivo de salida.
 
 ## Como compilar
 
@@ -194,8 +256,24 @@ La prueba imprime:
 - Total de registros.
 - Cantidad de `TotalCharges` vacios.
 - Tamano del vector.
-- Primer `customerID`.
-- Ultimo `customerID`.
+- Primeros 5 `customerID` y `tenure` antes de ordenar.
+- Primeros 10 `customerID` y `tenure` despues de ordenar.
+- La ruta del archivo CSV generado.
+- El `tenure` maximo del primer elemento ya ordenado.
+
+Con el dataset actual, despues de ordenar el primer elemento tiene:
+
+```text
+tenureMaximo: 72
+```
+
+Tambien se genera:
+
+```text
+results/solicitudes_ordenadas.csv
+```
+
+Con el dataset actual, el archivo tiene 7044 lineas: una linea de header y 7043 solicitudes.
 
 ## Que esta hecho
 
@@ -209,10 +287,11 @@ Ya esta hecho:
 - Manejar `TotalCharges` vacio.
 - Contar registros.
 - Guardar todo en un `vector<Solicitud>`.
+- Ordenar solicitudes por `tenure` descendente con MergeSort estable.
+- Escribir `results/solicitudes_ordenadas.csv` con las solicitudes ordenadas.
 
 Falta para despues:
 
-- MergeSort.
 - Binary Search.
 - Kruskal.
 - Knapsack.
