@@ -13,12 +13,12 @@
   Sub-problema: 3 solicitudes del conjunto anterior.
   Capacidad W' = 1363 + 1469 = 2832
 
-  ------------------------------------------------------------------
-  Enfoque               Solicitudes seleccionadas Valor total Optimo?
-  ------------------------------------------------------------------
-  Codicioso (ratio v/w) A (4312-KFRXN)            254         No
-  PD (Mochila 0-1)      B+C (2848-YXSMW+7606-BPHHN)392         Si
-  ------------------------------------------------------------------
+  -------------------------------------------------------------------------
+  Enfoque               |Solicitudes seleccionadas   |Valor total | Optimo? 
+  -------------------------------------------------------------------------
+  Codicioso (ratio v/w) |A (4312-KFRXN)              |    254     |   No     
+  PD (Mochila 0-1)      |B+C (2848-YXSMW+7606-BPHHN) |    392     |   Si     
+  -------------------------------------------------------------------------
 
 ============ ACTIVIDAD 3 - RECONSTRUCCION DE LA SOLUCION =============
 
