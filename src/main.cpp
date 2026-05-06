@@ -43,9 +43,7 @@ int main(int argc, char *argv[])
 
     try
     {
-        /* ══════════════════════════════════════════════════════
-           MÓDULO A — Divide y Vencerás
-           ══════════════════════════════════════════════════════ */
+        // modulo A
         int totalRegistros = 0;
         int totalChargesNulos = 0;
         vector<Solicitud> solicitudes =
@@ -88,13 +86,9 @@ int main(int argc, char *argv[])
             const int idx = findFirstTenureGE(solicitudes, k);
             cout << "k=" << k << " -> idx=" << idx << " -> customerID=";
             if (idx != -1)
-            {
                 cout << solicitudes[idx].customerID;
-            }
             else
-            {
                 cout << "N/A";
-            }
             cout << '\n';
         }
 
@@ -107,23 +101,16 @@ int main(int argc, char *argv[])
         cout << "Archivo escrito: " << salidaBusquedas << '\n';
 
         if (!solicitudes.empty())
-        {
             cout << "\ntenureMaximo: " << solicitudes.front().tenure << '\n';
-        }
 
-        /* ══════════════════════════════════════════════════════
-           MÓDULO C — Programación Dinámica (Mochila 0-1)
-           Entrada: solicitudes ya ordenadas por tenure DESC
-           ══════════════════════════════════════════════════════ */
-        const int W = 500;
+        // modulo C - mochila 0-1
+        int W = 500;
+        vector<ItemMochila> items = construirItems(solicitudes);
+        vector<vector<int>> dp = knapsack01(items, W);
+        vector<int> seleccionados = backtrack(dp, items, W);
 
-        const vector<ItemMochila> items  = construirItems(solicitudes);
-        const vector<vector<int>> dp     = knapsack01(items, W);
-        const vector<int> seleccionados  = backtrack(dp, items, W);
-
-        const string salidaKnapsack = "results/asignacion_bw.txt";
+        string salidaKnapsack = "results/asignacion_bw.txt";
         escribirResultadosKnapsack(salidaKnapsack, items, dp, seleccionados, W);
-        cout << "Archivo escrito: " << salidaKnapsack << '\n';
     }
     catch (const exception &e)
     {
