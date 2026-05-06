@@ -1,6 +1,7 @@
 // main :D
 
 #include "binary_search.hpp"
+#include "knapsack.hpp"
 #include "mergesort.hpp"
 #include "parser.hpp"
 
@@ -32,7 +33,7 @@ inline double medirMergeSort(vector<Solicitud> &solicitudes)
     return chrono::duration<double, milli>(fin - inicio).count();
 }
 
-inline int ejecutarPruebaMergeSort(int argc, char *argv[])
+int main(int argc, char *argv[])
 {
     if (argc < 2)
     {
@@ -42,6 +43,9 @@ inline int ejecutarPruebaMergeSort(int argc, char *argv[])
 
     try
     {
+        /* ══════════════════════════════════════════════════════
+           MÓDULO A — Divide y Vencerás
+           ══════════════════════════════════════════════════════ */
         int totalRegistros = 0;
         int totalChargesNulos = 0;
         vector<Solicitud> solicitudes =
@@ -68,9 +72,9 @@ inline int ejecutarPruebaMergeSort(int argc, char *argv[])
 
         cout << fixed << setprecision(2);
         cout << "\n--- TIEMPOS MERGESORT ---\n";
-        cout << "n=" << full.size() << " → " << tiempoFull << " ms\n";
-        cout << "n=" << sub3500.size() << " → " << tiempo3500 << " ms\n";
-        cout << "n=" << sub1000.size() << " → " << tiempo1000 << " ms\n";
+        cout << "n=" << full.size() << " -> " << tiempoFull << " ms\n";
+        cout << "n=" << sub3500.size() << " -> " << tiempo3500 << " ms\n";
+        cout << "n=" << sub1000.size() << " -> " << tiempo1000 << " ms\n";
 
         mergeSortSolicitudes(solicitudes);
 
@@ -106,6 +110,20 @@ inline int ejecutarPruebaMergeSort(int argc, char *argv[])
         {
             cout << "\ntenureMaximo: " << solicitudes.front().tenure << '\n';
         }
+
+        /* ══════════════════════════════════════════════════════
+           MÓDULO C — Programación Dinámica (Mochila 0-1)
+           Entrada: solicitudes ya ordenadas por tenure DESC
+           ══════════════════════════════════════════════════════ */
+        const int W = 500;
+
+        const vector<ItemMochila> items  = construirItems(solicitudes);
+        const vector<vector<int>> dp     = knapsack01(items, W);
+        const vector<int> seleccionados  = backtrack(dp, items, W);
+
+        const string salidaKnapsack = "results/asignacion_bw.txt";
+        escribirResultadosKnapsack(salidaKnapsack, items, dp, seleccionados, W);
+        cout << "Archivo escrito: " << salidaKnapsack << '\n';
     }
     catch (const exception &e)
     {
