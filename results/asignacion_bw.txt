@@ -1,0 +1,50 @@
+============== ACTIVIDAD 1 - MOCHILA 0-1 POR TABULACION ==============
+
+  Tabla dp[i][w] construida con dimensiones (51) x (501).
+
+  Valor optimo dp[50][500]   : 0
+  Numero de solicitudes seleccionadas : 0
+
+  CustomerIDs incluidos: (ninguno)
+  Todos los pesos w_i > W = 500; ningun item cabe en la mochila.
+
+============= ACTIVIDAD 2 - FALLO DEL ENFOQUE CODICIOSO ==============
+
+  Sub-problema: 3 solicitudes del conjunto anterior.
+  Capacidad W' = 1363 + 1469 = 2832
+
+  ------------------------------------------------------------------
+  Enfoque               Solicitudes seleccionadas Valor total Optimo?
+  ------------------------------------------------------------------
+  Codicioso (ratio v/w) A (4312-KFRXN)            254         No
+  PD (Mochila 0-1)      B+C (2848-YXSMW+7606-BPHHN)392         Si
+  ------------------------------------------------------------------
+
+============ ACTIVIDAD 3 - RECONSTRUCCION DE LA SOLUCION =============
+
+  Backtracking sobre dp[i][cap]: si dp[i][cap] != dp[i-1][cap],
+  el item i fue incluido; se descuenta su peso y se retrocede.
+
+  Conjunto recuperado: VACIO
+  (dp[i][cap] == dp[i-1][cap] para todo i -> ningun item incluido)
+
+=============== ACTIVIDAD 4 - ANALISIS DE COMPLEJIDAD ================
+
+  Tiempo: T(n,W) = Theta(n * W)
+    - Bucle exterior i = 1..n : n iteraciones.
+    - Bucle interior w = 0..W : W+1 iteraciones.
+    - Cada celda dp[i][w]     : O(1).
+
+  Espacio: S(n,W) = Theta(n * W)
+    - Tabla dp de (n+1)(W+1) enteros.
+    - Reducible a Theta(W) sin backtracking.
+
+  Pseudopolinomialidad:
+    W no es el tamano del input; ocupa O(log W) bits.
+    Theta(n*W) = Theta(n * 2^{log W}) es exponencial
+    en el tamano real del input.
+    La Mochila 0-1 es NP-dificil; este algoritmo es
+    pseudopolinomial, no polinomial en sentido estricto.
+
+  Instancia: n=50, W=500.
+  Celdas dp: 50 x 501 = 25050.
