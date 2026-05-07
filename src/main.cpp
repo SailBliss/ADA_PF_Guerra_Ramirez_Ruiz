@@ -1,7 +1,9 @@
 // main :D
 
 #include "binary_search.hpp"
+#include "graph.hpp"
 #include "knapsack.hpp"
+#include "kruskal.hpp"
 #include "mergesort.hpp"
 #include "parser.hpp"
 
@@ -111,6 +113,11 @@ int main(int argc, char *argv[])
 
         string salidaKnapsack = "results/asignacion_bw.txt";
         escribirResultadosKnapsack(salidaKnapsack, items, dp, seleccionados, W);
+
+        Graph graph(solicitudes);
+        MSTResult fullMST = kruskal(graph);
+        MSTResult sub5MST = kruskalSubgraph5(graph);
+        escribirMST("results/mst_red.txt", fullMST, sub5MST, graph);
     }
     catch (const exception &e)
     {
