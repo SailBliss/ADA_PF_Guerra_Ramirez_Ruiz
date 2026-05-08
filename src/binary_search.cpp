@@ -44,12 +44,12 @@ int binarySearchRec(const vector<Solicitud>& v, int left, int right, int k) {
 
     const int mid = left + (right - left) / 2;
 
-    if (v[mid].tenure >= k) {
-        const int candidate = binarySearchRec(v, left, mid - 1, k);
-        if (candidate != -1) {
-            return candidate;
-        }
+    if (v[mid].tenure == k) {
         return mid;
+    }
+
+    if (v[mid].tenure > k) {
+        return binarySearchRec(v, mid + 1, right, k);
     }
 
     return binarySearchRec(v, left, mid - 1, k);
@@ -57,7 +57,7 @@ int binarySearchRec(const vector<Solicitud>& v, int left, int right, int k) {
 
 }
 
-int findFirstTenureGE(const vector<Solicitud>& v, int k) {
+int findTenure(const vector<Solicitud>& v, int k) {
     if (v.empty()) {
         return -1;
     }
@@ -77,13 +77,13 @@ void escribirResultadosBusqueda(const string& path,
     const vector<int> consultas = {72, 60, 45, 30, 12};
     for (size_t i = 0; i < consultas.size(); ++i) {
         const int k = consultas[i];
-        const int idx = findFirstTenureGE(v, k);
+        const int idx = findTenure(v, k);
         const string customerID = idx != -1 ? v[static_cast<size_t>(idx)].customerID : "N/A";
 
         archivo << "Q_A" << setw(2) << setfill('0') << (i + 1)
                 << " k=" << k
-                << " → idx=" << idx
-                << " → customerID=" << customerID
+                << " -> idx=" << idx
+                << " -> customerID=" << customerID
                 << '\n';
     }
 }
