@@ -17,35 +17,33 @@
 
 using namespace std;
 
-inline void imprimirPrimeros(const vector<Solicitud> &solicitudes, size_t cantidad)
+namespace {
+
+void imprimirPrimeros(const vector<Solicitud>& solicitudes, size_t cantidad)
 {
     const size_t limite = min(cantidad, solicitudes.size());
     for (size_t i = 0; i < limite; ++i)
-    {
         cout << solicitudes[i].customerID << " tenure=" << solicitudes[i].tenure << '\n';
-    }
 }
 
-inline double medirMergeSort(vector<Solicitud> &solicitudes)
+double medirMergeSort(vector<Solicitud>& solicitudes)
 {
     const auto inicio = chrono::high_resolution_clock::now();
     mergeSortSolicitudes(solicitudes);
     const auto fin = chrono::high_resolution_clock::now();
-
     return chrono::duration<double, milli>(fin - inicio).count();
 }
 
-int main(int argc, char *argv[])
+}
+
+int main(int argc, char* argv[])
 {
-    if (argc < 2)
-    {
+    if (argc < 2) {
         cerr << "Uso: " << argv[0] << " <ruta_csv>\n";
         return 1;
     }
 
-    try
-    {
-        // modulo A
+    try {
         int totalRegistros = 0;
         int totalChargesNulos = 0;
         vector<Solicitud> solicitudes =
@@ -83,20 +81,19 @@ int main(int argc, char *argv[])
 
         cout << "\nConsultas Binary Search tenure == k:\n";
         const vector<int> consultas = {72, 60, 45, 30, 12};
-        for (int k : consultas)
-        {
+        for (int k : consultas) {
             const int idx = findTenure(solicitudes, k);
             cout << "k=" << k << " -> idx=" << idx << " -> customerID=";
             if (idx != -1)
-                cout << solicitudes[idx].customerID;
+                cout << solicitudes[static_cast<size_t>(idx)].customerID;
             else
-                cout << "N/A";
+                cout << "no encontrado";
             cout << '\n';
         }
 
-        const string salida = "results/solicitudes_ordenadas.csv";
-        escribirSolicitudesOrdenadas(salida, solicitudes);
-        cout << "\nArchivo escrito: " << salida << '\n';
+        const string salidaOrdenadas = "results/solicitudes_ordenadas.csv";
+        escribirSolicitudesOrdenadas(salidaOrdenadas, solicitudes);
+        cout << "\nArchivo escrito: " << salidaOrdenadas << '\n';
 
         const string salidaBusquedas = "results/busquedas_A.txt";
         escribirResultadosBusqueda(salidaBusquedas, solicitudes);
@@ -106,28 +103,17 @@ int main(int argc, char *argv[])
             cout << "\ntenureMaximo: " << solicitudes.front().tenure << '\n';
 
         const int W = 500;
-
         const vector<ItemMochila> items = construirItems(solicitudes);
         const vector<vector<int>> dp = knapsack01(items, W);
         const vector<int> seleccionados = backtrack(dp, items, W);
-
         const string salidaKnapsack = "results/asignacion_bw.txt";
-        // modulo C - mochila 0-1
-        int W = 500;
-        vector<ItemMochila> items = construirItems(solicitudes);
-        vector<vector<int>> dp = knapsack01(items, W);
-        vector<int> seleccionados = backtrack(dp, items, W);
-
-        string salidaKnapsack = "results/asignacion_bw.txt";
         escribirResultadosKnapsack(salidaKnapsack, items, dp, seleccionados, W);
 
         Graph graph(solicitudes);
         MSTResult fullMST = kruskal(graph);
         MSTResult sub5MST = kruskalSubgraph5(graph);
         escribirMST("results/mst_red.txt", fullMST, sub5MST, graph);
-    }
-    catch (const exception &e)
-    {
+    } catch (const exception& e) {
         cerr << "Error: " << e.what() << '\n';
         return 1;
     }

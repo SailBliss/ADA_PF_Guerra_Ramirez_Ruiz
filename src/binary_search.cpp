@@ -78,7 +78,9 @@ void escribirResultadosBusqueda(const string& path,
     for (size_t i = 0; i < consultas.size(); ++i) {
         const int k = consultas[i];
         const int idx = findTenure(v, k);
-        const string customerID = idx != -1 ? v[static_cast<size_t>(idx)].customerID : "N/A";
+        const string customerID = idx != -1
+            ? v[static_cast<size_t>(idx)].customerID
+            : "no encontrado";
 
         archivo << "Q_A" << setw(2) << setfill('0') << (i + 1)
                 << " k=" << k

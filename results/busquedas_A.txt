@@ -1,0 +1,5 @@
+Q_A01 k=72 -> idx=219 -> customerID=6904-JLBGY
+Q_A02 k=60 -> idx=1429 -> customerID=7426-WEIJX
+Q_A03 k=45 -> idx=2475 -> customerID=7925-PNRGI
+Q_A04 k=30 -> idx=3410 -> customerID=2684-EIWEO
+Q_A05 k=12 -> idx=4951 -> customerID=7450-NWRTR

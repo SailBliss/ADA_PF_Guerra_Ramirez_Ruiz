@@ -1,0 +1,63 @@
+====== ACTIVIDAD 1 - MOCHILA 0-1 POR TABULACION ======
+
+Tabla dp[i][w] construida: dimensiones (51) x (501)
+n = 50 items  |  W = 500 unidades
+Peso minimo entre los 50 items: 1363
+
+Valor optimo dp[50][500] = 0
+Solicitudes seleccionadas: 0
+
+CustomerIDs incluidos: (ninguno)
+Todos los pesos w_i >= 1363 > W = 500. La mochila no puede admitir ningun item;
+el valor optimo 0 es matematicamente correcto.
+
+====== ACTIVIDAD 2 - FALLO DEL ENFOQUE CODICIOSO ======
+
+Sub-problema con 3 items del conjunto anterior.
+Capacidad W' = w_B + w_C = 1363 + 1469 = 2832
+
+Item customerID    w_i     v_i     ratio v/w
+--------------------------------------------------
+A    4312-KFRXN    1711    254     0.148451
+B    2848-YXSMW    1363    194     0.142333
+C    7606-BPHHN    1469    198     0.134786
+--------------------------------------------------
+
+Traza codicioso (orden por ratio desc: A > B > C):
+  Toma A (w=1711 <= W'=2832). Cap restante = 1121.
+  B requiere 1363 > 1121 -> no cabe.
+  C requiere 1469 > 1121 -> no cabe.
+
+----------------------------------------------------------------
+Enfoque               Solicitudes           Valor total Optimo?
+----------------------------------------------------------------
+Codicioso (ratio v/w) A (4312-KFRXN)        254         No
+PD (Mochila 0-1)      B+C (2848-YXSMW...)   392         Si
+----------------------------------------------------------------
+
+====== ACTIVIDAD 3 - RECONSTRUCCION DE LA SOLUCION ======
+
+Backtracking: recorre dp de i=n hasta i=1.
+Si dp[i][cap] != dp[i-1][cap], el item i fue incluido.
+
+Conjunto recuperado: VACIO
+dp[i][cap] == dp[i-1][cap] para todo i en {1..50}.
+
+====== ACTIVIDAD 4 - ANALISIS DE COMPLEJIDAD ======
+
+Tiempo: T(n,W) = Theta(n * W)
+  Bucle i = 1..n : n = 50 iteraciones.
+  Bucle w = 0..W : W+1 = 501 iteraciones.
+  Cada celda dp[i][w] : O(1).
+  Total celdas: 50 x 501 = 25050.
+
+Espacio: S(n,W) = Theta(n * W)
+  Tabla dp: (n+1)(W+1) = 25551 enteros.
+  Reducible a Theta(W) prescindiendo del backtracking.
+
+Pseudopolinomialidad:
+  El tamano del input es s = Theta(n * log W) bits.
+  W = 2^{Theta(log W)} es exponencial en log W.
+  Por tanto Theta(n*W) es exponencial en el tamano real del input.
+  La Mochila 0-1 es NP-dificil; este algoritmo es
+  pseudopolinomial, no polinomial en sentido estricto.
