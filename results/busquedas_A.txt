@@ -1,5 +1,0 @@
-Q_A01 k=72 → idx=0 → customerID=5248-YGIJN
-Q_A02 k=60 → idx=0 → customerID=5248-YGIJN
-Q_A03 k=45 → idx=0 → customerID=5248-YGIJN
-Q_A04 k=30 → idx=0 → customerID=5248-YGIJN
-Q_A05 k=12 → idx=0 → customerID=5248-YGIJN

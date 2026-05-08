@@ -6,7 +6,7 @@
 #include <string>
 #include <vector>
 
-int findFirstTenureGE(const std::vector<Solicitud>& v, int k);
+int findTenure(const std::vector<Solicitud>& v, int k);
 void escribirResultadosBusqueda(const std::string& path,
                                 const std::vector<Solicitud>& v);
 

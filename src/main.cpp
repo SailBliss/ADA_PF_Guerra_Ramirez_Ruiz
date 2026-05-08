@@ -43,9 +43,6 @@ int main(int argc, char *argv[])
 
     try
     {
-        /* ══════════════════════════════════════════════════════
-           MÓDULO A — Divide y Vencerás
-           ══════════════════════════════════════════════════════ */
         int totalRegistros = 0;
         int totalChargesNulos = 0;
         vector<Solicitud> solicitudes =
@@ -81,11 +78,11 @@ int main(int argc, char *argv[])
         cout << "\nPrimeros 10 despues de ordenar por tenure DESC:\n";
         imprimirPrimeros(solicitudes, 10);
 
-        cout << "\nConsultas Binary Search tenure >= k:\n";
+        cout << "\nConsultas Binary Search tenure == k:\n";
         const vector<int> consultas = {72, 60, 45, 30, 12};
         for (int k : consultas)
         {
-            const int idx = findFirstTenureGE(solicitudes, k);
+            const int idx = findTenure(solicitudes, k);
             cout << "k=" << k << " -> idx=" << idx << " -> customerID=";
             if (idx != -1)
             {
@@ -111,15 +108,11 @@ int main(int argc, char *argv[])
             cout << "\ntenureMaximo: " << solicitudes.front().tenure << '\n';
         }
 
-        /* ══════════════════════════════════════════════════════
-           MÓDULO C — Programación Dinámica (Mochila 0-1)
-           Entrada: solicitudes ya ordenadas por tenure DESC
-           ══════════════════════════════════════════════════════ */
         const int W = 500;
 
-        const vector<ItemMochila> items  = construirItems(solicitudes);
-        const vector<vector<int>> dp     = knapsack01(items, W);
-        const vector<int> seleccionados  = backtrack(dp, items, W);
+        const vector<ItemMochila> items = construirItems(solicitudes);
+        const vector<vector<int>> dp = knapsack01(items, W);
+        const vector<int> seleccionados = backtrack(dp, items, W);
 
         const string salidaKnapsack = "results/asignacion_bw.txt";
         escribirResultadosKnapsack(salidaKnapsack, items, dp, seleccionados, W);
